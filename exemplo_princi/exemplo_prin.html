@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function chanceInimigo() {
+            const tiposInimigos = [
+                { nome: "Esqueleto Miserável", vida: 300, dano: 100 },
+                { nome: "Esqueleto de Armadura", vida: 400, dano: 150 },
+                { nome: "Esqueleto Mago", vida: 200, dano: 250 }
+            ];
+            return tiposInimigos[Math.floor(Math.random() * tiposInimigos.length)];
+        }
+
+        function combate(jogador, inimigo) {
+            while (jogador.vida > 0 && inimigo.vida > 0) {
+                if (confirm("Atacar (A) ou não (B)?")) {
+                    const chanceAcertoJogador = Math.random();
+                    if (chanceAcertoJogador < 0.7) {
+                        inimigo.vida -= jogador.dano;
+                        alert(`Você acertou o ataque! Vida do inimigo: ${inimigo.vida}`);
+                        const chanceCritico = Math.random();
+                        if (chanceCritico < 0.3) {
+                            inimigo.vida -= jogador.dano * 2;
+                            alert(`Ataque crítico! Vida do inimigo: ${inimigo.vida}`);
+                        }
+                    } else {
+                        alert("Você errou o ataque!!!");
+                    }
+                }
+
+                const chanceAcertoInimigo = Math.random() > 0.7;
+                if (chanceAcertoInimigo) {
+                    const chanceCritico = Math.random() > 0.2;
+                    jogador.vida -= inimigo.dano * (chanceCritico * 2);
+                    alert(`O inimigo acertou o ataque! Sua vida: ${jogador.vida}`);
+                } else {
+                    alert("O inimigo errou o ataque!!!");
+                }
+
+                if (inimigo.vida <= 0) {
+                    alert(`${inimigo.nome} foi derrotado com sucesso!`);
+                }
+
+                if (jogador.vida <= 0) {
+                    alert(`Você foi derrotado por ${inimigo.nome}!`);
+                    break;
+                }
+            }
+        }
+
+        function iniciarJogo(jogador) {
+            let hp = jogador.vida;
+            let dano = jogador.dano;
+
+            let inicio = prompt("O que você quer fazer? Quer entrar na masmorra digite (A), quer explorar os arredores digite (B)");
+
+            if (inicio == "A") {
+                alert("Entrou na masmorra");
+            } else {
+                alert("Você está andando pelos arredores");
+                let item = Math.random() < 0.5;
+
+                if (item) {
+                    hp += 50;
+                    alert(`Achou um item, sua vida aumentou para ${hp}`);
+                } else {
+                    alert("Não achou nada");
+                }
+            }
+
+            let inicio2 = prompt("Dentro da masmorra você nota que ela é fria e te causa calafrios, mas você vê uma porta com uma armadilha, quer tentar desarmá-la (A) ou quer continuar andando (B)");
+            let armadilha = Math.random() < 0.5;
+            if (armadilha) {
+                hp -= 100;
+                alert(`Você não conseguiu desarmar a armadilha e uma flecha te atingiu, você bloqueou mas causou um dano considerável. Sua vida agora é de: ${hp}`);
+            } else {
+                dano += 50;
+                alert(`Você achou um ANEL DE CRANIOS! Ela é um item unico raro de um rei grandioso, os boatos diziam que ele não tiraava esse anel para nada... \n Seu dano aumentou para: ${dano}`);
+            }
+
+            alert("Seguiu caminhando pela caverna adiante, você entrou na masmorra, você viu uma movimentação em um canto da masmorra");
+
+            let inicio3 = prompt("O que você deseja fazer? Deixar para lá e seguir caminhando (A) ou ver a movimentação (B)");
+            let cair = Math.random() < 0.33;
+
+            if (cair) {
+                hp -= 200;
+                alert(`Você tropeçou e caiu, perdeu 200 de vida. Sua vida agora é ${hp}`);
+            } else {
+                alert("Quase que você tropeça, fique mais esperto");
+            }
+
+            if (inicio3 == "A") {
+              let acharInimigos = Math.random() < 0.5;
+                if (acharInimigos == 0.5) {
+                let numInimigos = Math.floor(Math.random() * 4);
+                for (let i = 0; i < numInimigos; i++) {
+                    alert("Achou um inimigo!!!");
+                    const inimigo = chanceInimigo();
+                    alert(`Inimigo Apareceu: ${inimigo.nome} - Vida: ${inimigo.vida}, Dano: ${inimigo.dano}`);
+                    combate({ vida: hp, dano: dano }, inimigo);
+                }
+              }
+
+                alert("Você adentrou mais profundamente na masmorra");
+            } 
+            else if (inicio3 == "B") {
+              let acharInimigos = Math.random() < 0.5;
+                if (acharInimigos) {
+                let numInimigos = Math.floor(Math.random() * 3) + 1; // entre 1 e 3 inimigos
+                for (let i = 0; i < numInimigos; i++) {
+                    alert("Achou um inimigo!!!");
+                    const inimigo = chanceInimigo();
+                    alert(`Inimigo Apareceu: ${inimigo.nome} - Vida: ${inimigo.vida}, Dano: ${inimigo.dano}`);
+                    combate({ vida: hp, dano: dano }, inimigo);
+                    }
+                } else {
+                    alert("Você vê um esqueleto na sua frente, mas consegue escapar sem ser visto...");
+                }
+                
+            }
+
+            let itemRaro = Math.random() < 0.25;
+            let inicio4 = prompt("Você se aproxima do final da masmorra, você vê um brilho intenso, com um item no meio, quer pegá-lo (A) ou não (B)");
+            if (inicio4 == "A") {
+                if (itemRaro) {
+                    dano += 300;
+                    hp += 400;
+                    alert(`Você achou o Colar Sangrento! Seu dano aumentou para ${dano} e sua vida para ${hp}`);
+                } else {
+                    alert("Você não tentou pegar o item e não conseguiu...");
+                }
+            } else if (inicio4 == "B") {
+                alert("Você não tentou pegar o item...");
+            }
+        }
+
+        function escolherPersonagem() {
+            let mago = { nome: "Mago", vida: 600, dano: 250 };
+            let berserk = { nome: "Berserk", vida: 1200, dano: 150 };
+            let guerreiro = { nome: "Guerreiro", vida: 800, dano: 200 };
+
+            let escolha = prompt(`Qual personagem você quer escolher? \n (A) ${mago.nome} - Vida: ${mago.vida}, Dano: ${mago.dano} \n (B) ${berserk.nome} - Vida: ${berserk.vida}, Dano: ${berserk.dano} \n (C) ${guerreiro.nome} - Vida: ${guerreiro.vida}, Dano: ${guerreiro.dano}`);
+            
+            if (escolha == "A") {
+                iniciarJogo(mago);
+            } else if (escolha == "B") {
+                iniciarJogo(berserk);
+            } else if (escolha == "C") {
+                iniciarJogo(guerreiro);
+            } else {
+                alert("Escolha inválida! Por favor, escolha novamente.");
+                escolherPersonagem();
+            }
+        }
+
+        escolherPersonagem();
+    </script>
+</body>
+</html>
+
